@@ -60,3 +60,12 @@ def logout_view(request):
     return redirect('login')
 
 
+from django.http import FileResponse, Http404
+import os
+from django.conf import settings
+
+def serve_media(request, path):
+    file_path = os.path.join(settings.MEDIA_ROOT, path)
+    if os.path.exists(file_path):
+        return FileResponse(open(file_path, 'rb'))
+    raise Http404
