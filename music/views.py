@@ -23,8 +23,21 @@ def add_song(request):
 
 from django.shortcuts import get_object_or_404
 @login_required
+@login_required
 def delete_song(request, id):
     song = get_object_or_404(Song, id=id)
     if request.method == 'POST':
         song.delete()
     return redirect('music_list')
+
+@login_required
+def edit_song(request, id):
+    song = get_object_or_404(Song, id=id)
+    if request.method == 'POST':
+        form = SongForm(request.POST, request.FILES, instance=song)
+        if form.is_valid():
+            form.save()
+            return redirect('music_list')
+    else:
+        form = SongForm(instance=song)
+    return render(request, 'music/edit.html', {'form': form, 'song': song})
